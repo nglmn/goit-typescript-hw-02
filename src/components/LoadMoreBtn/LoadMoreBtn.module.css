@@ -1,0 +1,13 @@
+.loadBtn{
+    margin: 0 auto;
+    padding: 20px;
+    width: fit-content;
+    font-size: large;
+    background-color: #3916ff;
+    color: aliceblue;
+    border-radius: 16px;
+    border: 1px solid aliceblue;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
