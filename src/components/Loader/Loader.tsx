@@ -1,6 +1,10 @@
 import { Oval } from "react-loader-spinner"
 import css from './Loader.module.css';
-const Loader = ({ loading }) => {
+
+type LoaderProps = {
+    loading: boolean;
+}
+const Loader: React.FC<LoaderProps> = ({ loading }) => {
     return (
         <div className={css.loader}>
             {loading &&

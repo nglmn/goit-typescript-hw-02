@@ -1,8 +1,14 @@
+import { ApiImageKeys } from "../../types";
 import css from "./ImageCard.module.css";
 
-const ImageCard = ({ imageProps, openModal }) => {
+type ImageCardProps = {
+    imageProps: ApiImageKeys;
+    openModal: (imageUrl: string) => void;
+}
+
+const ImageCard: React.FC<ImageCardProps> = ({ imageProps, openModal }) => {
     const { alt_description, urls: { regular, small } } = imageProps;
-    const handleClick = () => {
+    const handleClick = (): void => {
         openModal(regular)
     }
 

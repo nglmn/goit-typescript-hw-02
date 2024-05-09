@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, SetStateAction } from "react";
 import Modal from 'react-modal';
+import { ImagesTypeObj } from "./types";
 
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import SearchBar from "./components/SearchBar/SearchBar";
@@ -14,18 +15,18 @@ import "./App.css";
 Modal.setAppElement('#root');
 
 const App = () => {
-	const [images, setImages] = useState({
+	const [images, setImages] = useState<ImagesTypeObj>({
 		results: [],
 		total_pages: 0,
 		total: 0
 	});
-	const [inputSearch, setInputSearch] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [showMoreBtn, setShowMoreBtn] = useState(false);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [errorMessage, setErrorMessage] = useState(false);
-	const [modalSizeImg, setModalSizeImg] = useState(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [inputSearch, setInputSearch] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(false);
+	const [showMoreBtn, setShowMoreBtn] = useState<boolean>(false);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [errorMessage, setErrorMessage] = useState<boolean>(false);
+	const [modalSizeImg, setModalSizeImg] = useState<string | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 	const changedUserInput = useMemo(() => {
 		setCurrentPage(1);
@@ -34,7 +35,7 @@ const App = () => {
 			total_pages: 0,
 			total: 0
 		})
-	}, [inputSearch]);
+	}, [] as const);
 
 	useEffect(() => {
 		if (!inputSearch) return;
@@ -68,14 +69,14 @@ const App = () => {
 		getData();
 	}, [inputSearch, currentPage, changedUserInput])
 
-	function loadMoreImages() {
+	function loadMoreImages(): void {
 		setCurrentPage(currentPage + 1);
 	}
-	const openModal = imageUrl => {
+	function openModal(imageUrl: string): void {
 		setIsModalOpen(true);
 		setModalSizeImg(imageUrl)
 	}
-	function closeModal() {
+	function closeModal(): void {
 		setIsModalOpen(false);
 		setModalSizeImg(null);
 	}
@@ -86,17 +87,21 @@ const App = () => {
 			<div className="content">
 				<ImageGallery
 					images={images.results}
-					openModal={openModal} />
+					openModal={openModal}
+				/>
 				{loading
 					? <Loader loading={loading} />
-					: (showMoreBtn && <LoadMoreBtn loadMoreImages={loadMoreImages} />)}
+					: (showMoreBtn && <LoadMoreBtn loadMoreImages={loadMoreImages} />)
+				}
 				<ErrorMessage errorMessage={errorMessage} />
 				{modalSizeImg
 					&& <ImageModal
 						openModal={openModal}
 						isOpen={isModalOpen}
 						modalSizeImg={modalSizeImg}
-						closeModal={closeModal} />}
+						closeModal={closeModal}
+						/>
+				}
 			</div>
 		</>
 	)

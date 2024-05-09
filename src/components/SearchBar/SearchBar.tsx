@@ -1,10 +1,15 @@
+import { FormEvent } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import css from "./SearchBar.module.css";
 
-const SearchBar = ({ setInputSearch }) => {
-    const handleSubmit = (e) => {
+type SearchBarProps = {
+    setInputSearch: (str: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ setInputSearch }) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const search = e.target.elements.inputSearch.value;
+        const search: string = e.target.elements.inputSearch.value;
         if (!search) {
             return toast.error("The field is empty");
         } else {
