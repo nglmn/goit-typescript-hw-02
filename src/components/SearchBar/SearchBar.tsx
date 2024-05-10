@@ -9,13 +9,13 @@ type SearchBarProps = {
 const SearchBar: React.FC<SearchBarProps> = ({ setInputSearch }) => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const search: string = e.target.elements.inputSearch.value;
-        if (!search) {
+        const query = (e.target as HTMLFormElement).elements.namedItem('inputSearch') as HTMLInputElement;
+        if (!query) {
             return toast.error("The field is empty");
         } else {
-            setInputSearch(search);
+            setInputSearch(query.value);
         }
-        e.target.reset();
+        (e.target as HTMLFormElement).reset();
     }
     return (
         <header className={css.header}>

@@ -2,7 +2,14 @@ import { ApiImageKeys } from "../../types";
 import css from "./ImageCard.module.css";
 
 type ImageCardProps = {
-    imageProps: ApiImageKeys;
+    imageProps: {
+        alt_description: string;
+        urls: {
+            regular: string;
+            small: string;
+        }
+    };
+    id: string;
     openModal: (imageUrl: string) => void;
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, SetStateAction } from "react";
 import Modal from 'react-modal';
-import { ImagesTypeObj } from "./types";
+import { ApiImageKeys, ImagesTypeObj } from "./types";
 
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import SearchBar from "./components/SearchBar/SearchBar";
@@ -15,11 +15,9 @@ import "./App.css";
 Modal.setAppElement('#root');
 
 const App = () => {
-	const [images, setImages] = useState<ImagesTypeObj>({
-		results: [],
-		total_pages: 0,
-		total: 0
-	});
+	const [images, setImages] = useState<ApiImageKeys[]>([]);
+	const [totalPages, setTotalPages] = useState<number>(0);
+	const [total, setTotal] = useState<number>(0);
 	const [inputSearch, setInputSearch] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const [showMoreBtn, setShowMoreBtn] = useState<boolean>(false);
@@ -30,12 +28,10 @@ const App = () => {
 
 	const changedUserInput = useMemo(() => {
 		setCurrentPage(1);
-		setImages({
-			results: [],
-			total_pages: 0,
-			total: 0
-		})
-	}, [] as const);
+		setImages([]);
+		setTotalPages(0);
+		setTotal(0);
+	}, [inputSearch]);
 
 	useEffect(() => {
 		if (!inputSearch) return;
@@ -45,18 +41,14 @@ const App = () => {
 				setShowMoreBtn(false);
 				setLoading(true);
 
-				const response = await getDataFromAPI(inputSearch, currentPage);
-				if (response.data.total === 0) {
+				const data: ImagesTypeObj = await getDataFromAPI(inputSearch, currentPage);
+				if (data.total === 0) {
 					return setErrorMessage(true);
 				}
-				if (response.data.total_pages > currentPage) {
-					setImages((prevState) => {
-						return {
-							results: [...prevState.results, ...response.data.results],
-							total_pages: response.data.total_pages,
-							total: response.data.total
-						};
-					})
+				if (data.total_pages > currentPage) {
+					setImages(prev => [...prev, ...data.results]);
+					setTotalPages(data.total_pages);
+					setTotal(data.total);
 					setShowMoreBtn(true);
 				}
 			} catch (error) {
@@ -85,10 +77,12 @@ const App = () => {
 		<>
 			<SearchBar setInputSearch={setInputSearch} />
 			<div className="content">
-				<ImageGallery
-					images={images.results}
-					openModal={openModal}
-				/>
+				{images &&
+					<ImageGallery
+						images={images}
+						openModal={openModal}
+					/>
+				 }
 				{loading
 					? <Loader loading={loading} />
 					: (showMoreBtn && <LoadMoreBtn loadMoreImages={loadMoreImages} />)
@@ -96,7 +90,6 @@ const App = () => {
 				<ErrorMessage errorMessage={errorMessage} />
 				{modalSizeImg
 					&& <ImageModal
-						openModal={openModal}
 						isOpen={isModalOpen}
 						modalSizeImg={modalSizeImg}
 						closeModal={closeModal}

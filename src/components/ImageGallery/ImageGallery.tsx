@@ -11,12 +11,11 @@ type UrlImageProps = {
     small: string;
 }
 type ImageProps = {
-    alt_description: string,
-    urls: UrlImageProps
+    alt_description: string;
+    urls: UrlImageProps;
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, openModal }) => {
-    console.log(images);
     return (
         <ul className={css.gallery}>
             {images.map(({ id, ...imageProps }) => (

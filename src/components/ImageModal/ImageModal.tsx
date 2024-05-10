@@ -3,14 +3,14 @@ import css from "./ImageModal.module.css";
 
 type ImageModalProps = {
     modalSizeImg: string;
-    openModal: (url: string) => void;
+    isOpen: boolean;
     closeModal: () => void;
 }
 
-const ImageModal: React.FC<ImageModalProps> = ({ modalSizeImg, openModal, closeModal }) => {
+const ImageModal: React.FC<ImageModalProps> = ({ modalSizeImg, closeModal, isOpen }) => {
     return (
         <Modal
-            isOpen={openModal}
+            isOpen={isOpen}
             className={css.modal}
             overlayClassName={css.overlay}
             onRequestClose={closeModal}>

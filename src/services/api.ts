@@ -12,7 +12,7 @@ type ParamsObj = {
     };
 }
 
-export const getDataFromAPI = async(inputSearch: string, currentPage: number): Promise<AxiosResponse<any>> | never => {
+export const getDataFromAPI = async<T>(inputSearch: string, currentPage: number): Promise<T> | never => {
     const params: ParamsObj = {
         params: {
             query: inputSearch,
@@ -24,8 +24,8 @@ export const getDataFromAPI = async(inputSearch: string, currentPage: number): P
         }
     };
     try {
-        const response: AxiosResponse<any> = axios.get(`https://api.unsplash.com/search/photos`, params);
-        return response;
+        const response = await axios.get(`https://api.unsplash.com/search/photos`, params);
+        return response.data;
     } catch (error) {
         throw new Error(`Error fetching data from API: ${error}`);
     }
